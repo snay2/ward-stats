@@ -7,10 +7,7 @@ This script, from https://reasoningmywaythroughmyfaith.blogspot.com/2020/04/find
 1. Log in to https://directory.churchofjesuschrist.org/
 1. Open developer tools
 1. Switch the unit dropdown in the top left to "Entire Stake"
-1. Filter the Network tab by "households"
-1. Open one of the requests and grab the `authorization` bearer token from the request headers
-1. Paste that into `bearer=''`
-1. Grab the unit with this command in the console: `window.location.href.substring(window.location.href.lastIndexOf('/')+1)`
+1. Grab the `unit` with this command in the console: `window.location.href.substring(window.location.href.lastIndexOf('/')+1)`
 1. Grab the `directoryAccessToken` with this command: `document.cookie.match(new RegExp('(^| )directory_access_token=([^;]+)'))[2]`
 1. Grab the `directoryIdentityToken` with this command: `document.cookie.match(new RegExp('(^| )directory_identity_token=([^;]+)'))[2]`
 1. Save that all and run the script

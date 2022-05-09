@@ -13,9 +13,6 @@ directoryAccessToken=''
 #  document.cookie.match(new RegExp('(^| )directory_identity_token=([^;]+)'))[2]
 directoryIdentityToken=''
 
-#have to get bearer from developer tools
-bearer=''
-
 def parseWardData(jsonData):
     membersInWard = 0
     membersWithCalling = 0
@@ -62,7 +59,7 @@ membersInStake = 0
 membersInStakeWithCalling = 0
 
 cookies = {'directory_access_token':directoryAccessToken+';', 'directory_identity_token':directoryIdentityToken+';'}
-headers = {'authorization': 'Bearer ' + bearer}
+headers = {'authorization': 'Bearer ' + directoryAccessToken}
 r = requests.get('https://directory.churchofjesuschrist.org/api/v4/units/'+unit, headers=headers, cookies=cookies)
 stakeData = json.loads(r.text)
 print("stake: " + stakeData['name'])
