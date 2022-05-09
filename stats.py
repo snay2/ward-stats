@@ -53,7 +53,7 @@ def parseWardData(jsonData):
     print("Adult members without a calling: " + str(membersWithoutCalling))
     print("Adult members with multiple callings: " + str(membersWithMultipleCallings))
     print("Adult members in the ward with Stake callings: " + str(membersWithStakeCallings))
-    print("Average estimated adult activity in ward: " + str(membersWithCalling / membersInWard))
+    print("Average estimated adult activity in ward: " + str(float(membersWithCalling / membersInWard)))
     
     return membersInWard, membersWithCalling
     
@@ -65,21 +65,20 @@ cookies = {'directory_access_token':directoryAccessToken+';', 'directory_identit
 headers = {'authorization': 'Bearer ' + bearer}
 r = requests.get('https://directory.churchofjesuschrist.org/api/v4/units/'+unit, headers=headers, cookies=cookies)
 stakeData = json.loads(r.text)
-#print("stake: " + str(stakeData))
+print("stake: " + stakeData['name'])
 if 'childUnits' in stakeData:
     childUnits = stakeData['childUnits']
     #print("childUnits: " + str(childUnits))
     for childUnit in childUnits:
-        #print("childUnit: " + str(childUnit))
+        print("childUnit: " + childUnit['name'])
         unitNumber = childUnit['unitNumber']
         r = requests.get('https://directory.churchofjesuschrist.org/api/v4/households?unit='+str(unitNumber), headers=headers, cookies=cookies)
         ward = json.loads(r.text)
-        #print("ward: " + str(ward))
         membersInWard, membersWithCalling = parseWardData(json.loads(r.text))
         membersInStakeWithCalling = membersInStakeWithCalling + membersWithCalling
         membersInStake = membersInStake + membersInWard
 
 print("Adult members in Stake: " + str(membersInStake))
 print("Adult members in Stake with callings: " + str(membersInStakeWithCalling))
-print("Average estimated adult activity in stake: " + str(membersInStakeWithCalling / membersInStake))
+print("Average estimated adult activity in stake: " + str(float(membersInStakeWithCalling / membersInStake)))
 

@@ -15,3 +15,9 @@ This script, from https://reasoningmywaythroughmyfaith.blogspot.com/2020/04/find
 1. Grab the `directoryIdentityToken` with this command: `document.cookie.match(new RegExp('(^| )directory_identity_token=([^;]+)'))[2]`
 1. Save that all and run the script
 
+## Troubleshooting
+
+### ModuleNotFoundError: No module named 'requests'
+
+`sudo pip3 install requests`
+
