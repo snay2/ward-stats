@@ -14,16 +14,17 @@ It pulls the number of adult members in your stake who have callings, broken dow
 1. Grab the `unit` from the end of the URL, or by running this command in the console:
     * `window.location.href.substring(window.location.href.lastIndexOf('/')+1)`
     * This will be a number around 6 or 7 digits long
-1. Grab the `directoryAccessToken` with this command:
-   * `document.cookie.match(new RegExp('(^| )directory_access_token=([^;]+)'))[2]`
-   * This will be an alphanumeric string around 30 characters long
-1. Grab the `directoryIdentityToken` with this command:
-   * `document.cookie.match(new RegExp('(^| )directory_identity_token=([^;]+)'))[2]`
-   * This will be a really long alphanumeric string several lines long
+1. Grab the `appSession` cookie from one of the valid requests executed by the page:
+   1. Open the Network tab
+   1. Find a request for `households?unit=`
+   1. Go to the Headers tab of that request
+   1. Scroll down to Request Headers
+   1. Find the Cookie header
+   1. Within that cookie, usually at the end, find the value of `appSession`. This will be a really long alphanumeric string.
 1. Paste those values into the corresponding variables at the top of the file
 1. Save that all and run the script with `python3 stats.py`
 
-You can save your unit number, because it won't change unless your stake gets reorganized. But you'll need to grab new tokens when you run the script again in the future.
+You can save your unit number, because it won't change unless your stake gets reorganized. But you'll need to grab a new session cookie when you run the script again in the future.
 
 ## Sample output
 
@@ -56,10 +57,10 @@ This tells you there is a 22% activity rate in the Anytown Ward, and a 29% activ
 
 ### json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 
-This is probably because your credentials are out of date. Fetch the `directoryAccessToken` and `directoryIdentityToken` again and retry.
+This is probably because your credentials are out of date. Fetch the `appSession` cookie again and retry.
 
 ## Future work
 
 * Default to JSON output, to make the results easier to import into a spreadsheet or to query on the command line with `jq`
 * Make an easier way to grab the credentials from the developer tools (maybe a JavaScript snippet that retrieves all three in an easily-copyable output)
-
+* Figure out if there's a way to get `appSession` without having to look at a request by hand. Previously they used `directoryAccessToken` and `directoryIdentityToken`, which were available in the page cookies themselves (and thus via JavaScript in the console), rather than `appSession` on an outgoing request.

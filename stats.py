@@ -1,17 +1,13 @@
 import json
 import requests
+import sys
 
 #javascritp to get unit 
 #  window.location.href.substring(window.location.href.lastIndexOf('/')+1)
 unit=''
 
-#javascirpt to get directory_access_token
-#  document.cookie.match(new RegExp('(^| )directory_access_token=([^;]+)'))[2]
-directoryAccessToken=''
-
-#javascript to get directory_identity_token
-#  document.cookie.match(new RegExp('(^| )directory_identity_token=([^;]+)'))[2]
-directoryIdentityToken=''
+#To get appSession, go to Network > (any request starting with "households?unit=") > Headers > Request Headers > Cookie > appSession (at the end)
+appSession=''
 
 def parseWardData(jsonData):
     membersInWard = 0
@@ -58,9 +54,11 @@ def parseWardData(jsonData):
 membersInStake = 0
 membersInStakeWithCalling = 0
 
-cookies = {'directory_access_token':directoryAccessToken+';', 'directory_identity_token':directoryIdentityToken+';'}
-headers = {'authorization': 'Bearer ' + directoryAccessToken}
-r = requests.get('https://directory.churchofjesuschrist.org/api/v4/units/'+unit, headers=headers, cookies=cookies)
+cookies = {'appSession':appSession+';'}
+r = requests.get('https://directory.churchofjesuschrist.org/api/v4/units/'+unit, cookies=cookies)
+if r.status_code != 200:
+    sys.exit("Something failed. Check your appSession cookie and try again. (HTTP status code " + str(r.status_code) + ")")
+
 stakeData = json.loads(r.text)
 print("stake: " + stakeData['name'])
 if 'childUnits' in stakeData:
@@ -69,7 +67,7 @@ if 'childUnits' in stakeData:
     for childUnit in childUnits:
         print("childUnit: " + childUnit['name'])
         unitNumber = childUnit['unitNumber']
-        r = requests.get('https://directory.churchofjesuschrist.org/api/v4/households?unit='+str(unitNumber), headers=headers, cookies=cookies)
+        r = requests.get('https://directory.churchofjesuschrist.org/api/v4/households?unit='+str(unitNumber), cookies=cookies)
         ward = json.loads(r.text)
         membersInWard, membersWithCalling = parseWardData(json.loads(r.text))
         membersInStakeWithCalling = membersInStakeWithCalling + membersWithCalling
