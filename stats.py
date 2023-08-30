@@ -6,8 +6,9 @@ import sys
 #  window.location.href.substring(window.location.href.lastIndexOf('/')+1)
 unit=''
 
-#To get appSession, go to Network > (any request starting with "households?unit=") > Headers > Request Headers > Cookie > appSession (at the end)
-appSession=''
+#To get appSession, go to Network > (any request starting with "households?unit=") > Headers > Request Headers > Cookie > appSession.0 and appSession.1 (near the end)
+appSession0=''
+appSession1=''
 
 def parseWardData(jsonData):
     membersInWard = 0
@@ -54,7 +55,7 @@ def parseWardData(jsonData):
 membersInStake = 0
 membersInStakeWithCalling = 0
 
-cookies = {'appSession':appSession+';'}
+cookies = {'appSession.0':appSession0+';','appSession.1':appSession1+';'}
 r = requests.get('https://directory.churchofjesuschrist.org/api/v4/units/'+unit, cookies=cookies)
 if r.status_code != 200:
     sys.exit("Something failed. Check your appSession cookie and try again. (HTTP status code " + str(r.status_code) + ")")
